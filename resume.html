@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>이력서_김민수_SK하이닉스지원</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #E60000;
+            --text-dark: #1d1d1f;
+            --text-gray: #6e6e73;
+            --border: #e5e5e5;
+        }
+
+        @media print {
+            .no-print, .no-print-top { display: none; }
+            body { padding: 0; margin: 0; background: white; }
+            .resume-wrapper { box-shadow: none !important; border: none !important; margin: 0 !important; width: 100% !important; max-width: none !important; padding: 0 !important; }
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f5f5f7;
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding: 40px 20px;
+        }
+
+        .no-print-top {
+            max-width: 800px;
+            margin: 0 auto 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-print {
+            background: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: none;
+            cursor: pointer;
+        }
+
+        .resume-wrapper {
+            background: white;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-radius: 12px;
+        }
+
+        header {
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 30px;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+
+        .header-main h1 {
+            font-size: 2.5rem;
+            margin-bottom: 5px;
+            letter-spacing: -1px;
+        }
+
+        .header-main p {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .contact-info {
+            text-align: right;
+            font-size: 0.9rem;
+            color: var(--text-gray);
+        }
+
+        section { margin-bottom: 40px; }
+
+        h2 {
+            font-size: 1.3rem;
+            color: var(--text-dark);
+            border-left: 4px solid var(--primary);
+            padding-left: 12px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .grid-two {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .info-item { margin-bottom: 15px; }
+        .info-item label {
+            display: block;
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: var(--text-gray);
+            margin-bottom: 4px;
+        }
+
+        .project-item { margin-bottom: 25px; }
+        .project-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+        .project-meta {
+            font-size: 0.85rem;
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .project-desc {
+            font-size: 0.95rem;
+            color: var(--text-dark);
+        }
+
+        .skill-group { margin-bottom: 15px; }
+        .skill-tag {
+            display: inline-block;
+            background: #f2f2f2;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-gray);
+            border-top: 1px solid var(--border);
+            padding-top: 20px;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="no-print-top">
+        <a href="index.html" style="text-decoration: none; color: var(--text-gray); font-weight: 600;">← 포트폴리오로 돌아가기</a>
+        <button onclick="window.print()" class="btn-print">PDF로 인쇄/저장하기</button>
+    </div>
+
+    <div class="resume-wrapper">
+        <header>
+            <div class="header-main">
+                <h1>김민수</h1>
+                <p>Maintenance Engineer | Scaling Master Key</p>
+            </div>
+            <div class="contact-info">
+                <p>minsukim0381@gmail.com</p>
+                <p>010-7544-0381</p>
+                <p>github.com/minsukim0381</p>
+            </div>
+        </header>
+
+        <section>
+            <h2>Summary</h2>
+            <p style="font-size: 1rem;">
+                동양미래대학교 로봇소프트웨어공학 전공생으로서, 하드웨어 기구 설계부터 고난도 PLC 제어, AI 기반 예지 보전 기술까지 아우르는 **HW/SW 융합형 설비 엔지니어**입니다. SK하이닉스의 미세공정 한계를 극복하는 최고의 설비 가용성을 목표로 하며, 문제 해결 중심의 'Scaling Master Key' 마인드셋을 갖추고 있습니다.
+            </p>
+        </section>
+
+        <section>
+            <h2>Experience & Education</h2>
+            <div class="project-item">
+                <div class="project-title">동양미래대학교 로봇소프트웨어학과</div>
+                <div class="project-meta">2023.03 - 2027.02 (졸업예정)</div>
+                <p class="project-desc">로봇 제어 및 소프트웨어 공학 전공 (전문 역량 로드맵 이수)</p>
+            </div>
+            <div class="project-item">
+                <div class="project-title">반도체 부트캠프 몰입형 교육 수료</div>
+                <div class="project-meta">2024 - 2025</div>
+                <p class="project-desc">PLC 실무 및 반도체 장비 S/W 제어 특화 과정 이수</p>
+            </div>
+        </section>
+
+        <section>
+            <h2>Core Skills</h2>
+            <div class="grid-two">
+                <div class="skill-group">
+                    <label>Hardware & Control</label>
+                    <span class="skill-tag">PLC (Mitsubishi/LS)</span>
+                    <span class="skill-tag">CAD (3D/2D)</span>
+                    <span class="skill-tag">회로 설계/분석</span>
+                    <span class="skill-tag">모터 제어</span>
+                </div>
+                <div class="skill-group">
+                    <label>Software & AI</label>
+                    <span class="skill-tag">Python/C#</span>
+                    <span class="skill-tag">AI 이상 징후 감지</span>
+                    <span class="skill-tag">ROS (Linux)</span>
+                    <span class="skill-tag">Firebase/Full-stack</span>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <h2>Key Projects</h2>
+            <div class="project-item">
+                <div class="project-title">AI 기반 풀스택 설비 대시보드 구축</div>
+                <div class="project-meta">React, Firebase, Gemini API</div>
+                <p class="project-desc">반도체 설비 데이터의 실시간 모니터링 및 AI 기반 트러블슈팅 가이드를 제공하는 대시보드 개발.</p>
+            </div>
+            <div class="project-item">
+                <div class="project-title">지능형 4축 구동 로봇 메커니즘 설계</div>
+                <div class="project-meta">SolidWorks, C++</div>
+                <p class="project-desc">기구적 동심도 오차를 소프트웨어 알고리즘으로 보정하여 주행 정밀도 98% 달성.</p>
+            </div>
+        </section>
+
+        <section>
+            <h2>Professional Certifications</h2>
+            <div class="grid-two">
+                <div class="info-item">
+                    <label>어학</label>
+                    <p>TOEIC Speaking (진행 중 / 글로벌 기술문서 독해 가능)</p>
+                </div>
+                <div class="info-item">
+                    <label>자격 사항</label>
+                    <p>전기기사/생산자동화산업기사 (준비 중)</p>
+                </div>
+            </div>
+        </section>
+
+        <footer>
+            본 이력서의 상세 내용은 김민수의 포트폴리오 웹사이트를 통해 확인하실 수 있습니다.
+        </footer>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="김민수의 주요 프로젝트 성과: 아두이노 금고, EV3 지능형 로봇, TRIZ 로봇 기구 설계, AI 풀스택 배포. 문제 해결 성과 위주.">
+    <meta name="keywords" content="아두이노, EV3, TRIZ, 바이브코딩, Gemini, Firebase, 로봇제어, 회로설계, 트러블슈팅, SK하이닉스 지원자">
+    <meta name="author" content="Kim Min-su">
+    <title>Projects | 김민수 SK하이닉스 포트폴리오</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .project-section {
+            padding: 100px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        .project-section:last-child {
+            border-bottom: none;
+        }
+        .tag {
+            display: inline-block;
+            background: #ffe6e6;
+            color: #E60000;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-right: 8px;
+            margin-bottom: 10px;
+        }
+        .project-img {
+            width: 100%;
+            height: auto;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            transition: var(--transition-smooth);
+            object-fit: cover;
+        }
+        .project-img:hover {
+            transform: scale(1.02);
+        }
+        .annotation {
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.4;
+            padding-left: 10px;
+            border-left: 2px solid var(--primary-color);
+        }
+        .annotation strong {
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="index.html" class="logo">Minsu.KIM</a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="class.html">Class & History</a></li>
+            <li><a href="projects.html" class="nav-active">Projects</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="board.html">Board</a></li>
+        </ul>
+    </nav>
+
+    <header style="padding: 140px 5% 40px; max-width: 1200px; margin: 0 auto;">
+        <h1 class="reveal">Verified Experience (VE):<br>문제 해결의 핵심 솔루션</h1>
+        <p class="reveal" style="color: #6e6e73; max-width: 600px; margin-top: 1rem;">
+            단순한 기술 구현을 넘어, 현장의 문제를 정의하고 데이터와 논리로 해결한 프로젝트 기록입니다.
+        </p>
+    </header>
+
+    <section class="projects-container">
+        <!-- Project 1: Digital Safe -->
+        <article class="project-section reveal">
+            <div class="project-detail">
+                <div class="project-content">
+                    <span class="tag">#Hardware</span> <span class="tag">#Troubleshooting</span>
+                    <h2>Project 1: 아두이노 디지털 금고 시스템</h2>
+                    <p style="margin-bottom: 1.5rem; font-weight: 500; font-size: 0.9rem;">팀구성: 김민수(PM, 로직 설계), 최승혁(전장 구성)</p>
+                    
+                    <div class="project-step"><span class="step-label">Problem</span><p>기존 키패드 방식은 외부 오염에 취약하고 입력 지연 발생. 특히 다중 암호 처리 시 메모리 병목 현상으로 인한 반응 속도 저하 문제 발견.</p></div>
+                    <div class="project-step"><span class="step-label">Strategy</span><p>가변저항(Analog Input)과 스위치 인터럽트 방식을 조합한 다중 입력 알고리즘 설계. 폴링(Polling) 방식 대신 상태 변화 기반 제어로 전환.</p></div>
+                    <div class="project-step"><span class="step-label">Solution</span><p>가변저항 0~20 단계별 수치 승인 로직 구현. 3단 암호 교차 검증 시스템 및 RGB-LED/부저를 통한 시각적/청각적 피드백 시스템 구축.</p></div>
+                    <div class="project-step"><span class="step-label">Result</span><p><strong>암호 처리 및 검증 속도 0.2초 이내 단축 (60% 개선).</strong> 배선 간소화를 통한 기판 노이즈 제로 달성 및 실무형 트러블슈팅 역량 증명.</p></div>
+                </div>
+                <div class="project-visual">
+                    <img src="assets/project1_safe_1776047281321.png" alt="아두이노 디지털 금고 배선도 및 프로토타입" class="project-img">
+                    <div class="annotation">
+                        <strong>Why:</strong> 현장의 물리적 버튼 내구 한계를 극복하기 위해 비접촉식/회전식 입력 장치의 가능성을 검토.<br>
+                        <strong>How:</strong> 인터럽트 로직을 적용하여 MCU 부하를 줄이고 실시간성을 확보함.
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <!-- Project 2: Running Robot (Team Leader) -->
+        <article class="project-section reveal">
+            <div class="project-detail">
+                <div class="project-content">
+                    <span class="tag">#MechDesign</span> <span class="tag">#TeamLeader</span>
+                    <h2>Project 2: 창의적 공학설계 '달리는 로봇' (총괄 팀장)</h2>
+                    <div class="project-step"><span class="step-label">Problem</span><p>초기 조립 후 고속 주행 시 부품 간 간섭 및 동심도 불일치로 인한 직진성 부족 및 주행 중지 현상 빈번.</p></div>
+                    <div class="project-step"><span class="step-label">Strategy</span><p>이중 너트 체결 방식 및 축 정렬 정밀 조정을 위한 지그(Jig) 제작 제안. 팀원 간 R&R을 기구 보강과 모션 스터디로 이원화하여 효율 극대화.</p></div>
+                    <div class="project-step"><span class="step-label">Solution</span><p>TRIZ 모법 기법을 적용하여 물리적 모순(강성 유지 vs 무게 경량화) 해결. 프레임 보강 및 기어비 최적화로 구동계 안정성 확보.</p></div>
+                    <div class="project-step"><span class="step-label">Result</span><p><strong>주행 오차율 15% 개선 및 직진 주행성 98% 확보.</strong> 팀 리더로서 협업 갈등을 정밀한 설계 데이터로 설득하며 목표 성능 달성.</p></div>
+                </div>
+                <div class="project-visual">
+                    <img src="assets/project3_robot_1776047315048.png" alt="달리는 로봇 기구 설계 및 모션 스터디" class="project-img">
+                    <div class="annotation">
+                        <strong>Why:</strong> 단순 동작을 넘어 미세한 기구적 오차(동심도)가 실제 설비 퍼포먼스에 미치는 영향을 파악하고자 함.<br>
+                        <strong>How:</strong> 모션 스터디 시뮬레이션을 통해 간섭 지점을 사전 예측하고 하드웨어 보정 수행.
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <!-- Project 3: EV3 Python -->
+        <article class="project-section reveal">
+            <div class="project-detail">
+                <div class="project-content">
+                    <span class="tag">#Python</span> <span class="tag">#SensorFusion</span>
+                    <h2>Project 3: 파이썬 기반 EV3 지능형 로봇 제어</h2>
+                    <div class="project-step"><span class="step-label">Problem</span><p>복잡한 경로 주행 시 단일 센서의 할루시네이션(오동작) 및 반사율 변화로 인한 경로 이탈 문제 발생.</p></div>
+                    <div class="project-step"><span class="step-label">Strategy</span><p>초음파, 자이로, 컬러 센서의 데이터를 가중치 기반으로 융합하는 Kalman Filter 유사 로직 및 파이썬 메모리 관리 최적화 적용.</p></div>
+                    <div class="project-step"><span class="step-label">Solution</span><p>센서 데이터 모니터링 모듈 개발. 실시간 자이로 보정을 통한 직선 주행성 강화 및 컬러 센서 샘플링 속도 상향 조절.</p></div>
+                    <div class="project-step"><span class="step-label">Result</span><p><strong>경로 정확도 95% 이상 유지.</strong> 환경 변화가 극심한 구간에서도 로봇의 자기 안정화 로직이 안정적으로 작동됨을 입증.</p></div>
+                </div>
+                <div class="project-visual">
+                    <img src="assets/project2_ev3_1776047297543.png" alt="EV3 센서 융합 및 파이썬 제어 로직" class="project-img">
+                    <div class="annotation">
+                        <strong>Why:</strong> 하드웨어의 한계(센서 오차)를 소프트웨어 로직(융합)으로 극복하는 엔지니어링 마인드 함양.<br>
+                        <strong>How:</strong> 파이썬의 객체지향 프로그래밍을 활용해 센서별 독립 모듈화 구현.
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <!-- Project 4: AI Fullstack -->
+        <article class="project-section reveal">
+            <div class="project-detail">
+                <div class="project-content">
+                    <span class="tag">#AI_Architect</span> <span class="tag">#VibeCoding</span>
+                    <h2>Project 4: AI 기반 풀스택 설비 대시보드 배포</h2>
+                    <div class="project-step"><span class="step-label">Problem</span><p>기존 수동 데이터 기록 방식의 한계로 실시간 설비 모니터링 및 트러블슈팅 이력 공유가 불가능함.</p></div>
+                    <div class="project-step"><span class="step-label">Strategy</span><p>Gemini 1.5 Pro를 이용해 '바이브 코딩' 프로세스 도입. AI가 작성한 코드의 보안 및 에러를 엔지니어가 직접 검증(Human-in-the-loop)하는 아키텍처 수립.</p></div>
+                    <div class="project-step"><span class="step-label">Solution</span><p>Firebase Realtime DB와 연동된 React 기반 대시보드 구축. Vercel을 통한 자동 배포 파이프라인 형성 및 데이터 시각화 성공.</p></div>
+                    <div class="project-step"><span class="step-label">Result</span><p><strong>설비 이상 징후 보고 및 공유 시간 실시간화.</strong> AI 아키텍트 역량을 활용해 기술적 장벽을 빠르게 넘고 비즈니스 가치 창출.</p></div>
+                </div>
+                <div class="project-visual">
+                    <img src="assets/project4_ai_1776047330288.png" alt="AI 클라우드 아키텍처 및 Firebase 배포" class="project-img">
+                    <div class="annotation">
+                        <strong>Why:</strong> 엔지니어의 도구로서 AI 활용 능력을 극대화하여 결과물의 질을 높이고 리소스를 효율화함.<br>
+                        <strong>How:</strong> Gemini의 코드를 라인 바이 라인으로 검증하고 Firebase 보안 규칙을 직접 설정함.
+                    </div>
+                </div>
+            </div>
+        </article>
+    </section>
+
+    <footer>
+        <p class="footer-text">© 2026 Kim Min-su. SK Hynix Maintenance Engineer Portfolio.</p>
+    </footer>
+
+    <script>
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 150;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        window.addEventListener("scroll", reveal);
+        window.onload = reveal;
+    </script>
+</body>
+</html>

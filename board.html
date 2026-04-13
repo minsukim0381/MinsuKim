@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="김민수의 포트폴리오 자유게시판. 의견 공유 및 Q&A를 진행합니다.">
+    <meta name="keywords" content="SK하이닉스, 김민수, 게시판, Q&A, 자유게시판">
+    <meta name="author" content="Kim Min-su">
+    <title>Board | 김민수 SK하이닉스 포트폴리오</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body style="background-color: var(--bg-light);">
+
+    <nav>
+        <a href="index.html" class="logo">Minsu.KIM</a>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="class.html">Class & History</a></li>
+            <li><a href="projects.html">Projects</a></li>
+            <li><a href="contact.html">Contact</a></li>
+            <li><a href="board.html" class="nav-active">Board</a></li>
+        </ul>
+    </nav>
+
+    <div class="board-container">
+        <header style="text-align: center; margin-bottom: 4rem;" class="reveal">
+            <h1 style="font-size: 3rem; margin-bottom: 1rem;">Free Board & Q&A</h1>
+            <p style="color: #6e6e73; font-size: 1.1rem;">자유로운 의견이나 궁금한 점을 남겨주세요.</p>
+        </header>
+
+        <!-- New Post Form -->
+        <section class="post-form reveal">
+            <h2 style="margin-bottom: 2rem; font-size: 1.5rem;">글 남기기</h2>
+            <form id="postForm">
+                <div class="form-group">
+                    <label for="author">작성자</label>
+                    <input type="text" id="author" placeholder="이름을 입력하세요" required>
+                </div>
+                <div class="form-group">
+                    <label for="content">내용</label>
+                    <textarea id="content" rows="4" placeholder="내용을 자유롭게 입력하세요" required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">등록하기</button>
+            </form>
+        </section>
+
+        <!-- Posts List -->
+        <section id="boardList" class="reveal">
+            <h2 style="margin-bottom: 2rem; font-size: 1.5rem;">전체 게시물</h2>
+            <div id="postsContainer">
+                <!-- Posts will be injected here -->
+                <p id="emptyMsg" style="text-align: center; color: var(--text-muted); padding: 3rem;">아직 게시물이 없습니다. 첫 글의 주인공이 되어보세요!</p>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <p class="footer-text">© 2026 Kim Min-su. SK Hynix Maintenance Engineer Portfolio.</p>
+    </footer>
+
+    <script>
+        const postForm = document.getElementById('postForm');
+        const postsContainer = document.getElementById('postsContainer');
+        const emptyMsg = document.getElementById('emptyMsg');
+
+        // Initial Load
+        window.onload = () => {
+            renderPosts();
+            reveal();
+        };
+
+        function renderPosts() {
+            const posts = JSON.parse(localStorage.getItem('minsu_board_data') || '[]');
+            postsContainer.innerHTML = '';
+            
+            if (posts.length === 0) {
+                postsContainer.appendChild(emptyMsg);
+                emptyMsg.style.display = 'block';
+                return;
+            }
+
+            posts.reverse().forEach((post, index) => {
+                // Reverse index because we reversed the array icon
+                const originalIndex = posts.length - 1 - index; 
+                const postEl = document.createElement('div');
+                postEl.className = 'post-item reveal active';
+                postEl.innerHTML = `
+                    <div class="post-header">
+                        <span class="post-author">${escapeHtml(post.author)}</span>
+                        <span class="post-date">${post.date}</span>
+                    </div>
+                    <div class="post-content">
+                        <p style="white-space: pre-wrap;">${escapeHtml(post.content)}</p>
+                    </div>
+                    
+                    <button class="reply-btn" onclick="toggleReplyForm(${originalIndex})">댓글 달기</button>
+                    
+                    <div id="replyForm-${originalIndex}" class="reply-form">
+                        <div class="form-group">
+                            <input type="text" id="replyAuthor-${originalIndex}" placeholder="댓글 작성자" style="padding: 0.5rem; font-size: 0.8rem; margin-bottom: 0.5rem; width: 100%;">
+                            <textarea id="replyContent-${originalIndex}" rows="2" placeholder="댓글 내용" style="padding: 0.5rem; font-size: 0.8rem; width: 100%;"></textarea>
+                        </div>
+                        <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.8rem;" onclick="submitReply(${originalIndex})">등록</button>
+                    </div>
+
+                    <div class="comment-section" id="comments-${originalIndex}">
+                        ${post.comments.map(c => `
+                            <div class="comment-item">
+                                <div class="comment-header">
+                                    <span>${escapeHtml(c.author)}</span>
+                                    <span style="font-size: 0.75rem; font-weight: normal; color: #999;">${c.date}</span>
+                                </div>
+                                <div>${escapeHtml(c.content)}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                postsContainer.appendChild(postEl);
+            });
+        }
+
+        postForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const author = document.getElementById('author').value;
+            const content = document.getElementById('content').value;
+            const date = new Date().toLocaleString('ko-KR');
+
+            const newPost = { author, content, date, comments: [] };
+            const posts = JSON.parse(localStorage.getItem('minsu_board_data') || '[]');
+            posts.push(newPost);
+            localStorage.setItem('minsu_board_data', JSON.stringify(posts));
+
+            postForm.reset();
+            renderPosts();
+        });
+
+        function toggleReplyForm(idx) {
+            const form = document.getElementById(`replyForm-${idx}`);
+            form.classList.toggle('active');
+        }
+
+        function submitReply(idx) {
+            const author = document.getElementById(`replyAuthor-${idx}`).value;
+            const content = document.getElementById(`replyContent-${idx}`).value;
+            if (!author || !content) {
+                alert('이름과 내용을 모두 입력해주세요.');
+                return;
+            }
+            const date = new Date().toLocaleString('ko-KR');
+
+            const posts = JSON.parse(localStorage.getItem('minsu_board_data') || '[]');
+            posts[idx].comments.push({ author, content, date });
+            localStorage.setItem('minsu_board_data', JSON.stringify(posts));
+
+            renderPosts();
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 150;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        window.addEventListener("scroll", reveal);
+    </script>
+</body>
+</html>

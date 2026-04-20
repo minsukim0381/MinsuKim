@@ -445,3 +445,72 @@ footer {
     z-index: -1;
 }
 
+
+/* Advanced Voting System */
+.post-item {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.post-content-container {
+    flex: 1;
+}
+
+.post-score-bar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 0.8rem;
+    border-radius: 16px;
+    width: 60px;
+    height: fit-content;
+    align-self: flex-start;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.vote-btn {
+    background: none;
+    border: none;
+    font-size: 1.4rem;
+    cursor: pointer;
+    color: #999;
+    padding: 0.4rem;
+    transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.vote-btn:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+    transform: scale(1.15);
+}
+
+.vote-btn.active-up {
+    color: #e1002d; /* SK Hynix Red */
+    filter: drop-shadow(0 0 5px rgba(225, 0, 45, 0.4));
+    font-weight: bold;
+}
+
+.vote-btn.active-down {
+    color: #f37021; /* SK Hynix Orange */
+    filter: drop-shadow(0 0 5px rgba(243, 112, 33, 0.4));
+    font-weight: bold;
+}
+
+.score-num {
+    font-size: 1.2rem;
+    font-weight: 800;
+    margin: 0.2rem 0;
+    color: #1d1d1f;
+    font-family: 'Inter', sans-serif;
+}

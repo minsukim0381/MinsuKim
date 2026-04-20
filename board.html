@@ -89,6 +89,10 @@
                     p.uid = Date.now() + Math.random().toString(36).substr(2, 9);
                     changed = true;
                 }
+                if (p.score === undefined) {
+                    p.score = p.likes || 0;
+                    changed = true;
+                }
             });
             if (changed) {
                 localStorage.setItem('minsu_board_data', JSON.stringify(posts));
@@ -108,8 +112,8 @@
                 posts.sort((a, b) => a.originalIndex - b.originalIndex);
             } else if (sortType === 'likes') {
                 posts.sort((a, b) => {
-                    if ((b.likes || 0) !== (a.likes || 0)) {
-                        return (b.likes || 0) - (a.likes || 0);
+                    if ((b.score || 0) !== (a.score || 0)) {
+                        return (b.score || 0) - (a.score || 0);
                     }
                     return b.originalIndex - a.originalIndex;
                 });
@@ -125,66 +129,75 @@
 
             posts.forEach((post) => {
                 const originalIndex = post.originalIndex;
+                const userVotes = JSON.parse(localStorage.getItem('minsu_user_votes') || '{}');
+                const userVote = userVotes[post.uid] || 0;
+                
                 const postEl = document.createElement('div');
                 postEl.className = 'post-item reveal active';
                 postEl.innerHTML = `
-                    <div class="post-header">
-                        <span class="post-author">${escapeHtml(post.author)}</span>
-                        <span class="post-date">${post.date}</span>
-                    </div>
-                    <div class="post-content">
-                        <p style="white-space: pre-wrap;">${escapeHtml(post.content)}</p>
-                    </div>
-                    
-                    <div class="post-actions">
-                        <button class="reply-btn" onclick="toggleReplyForm(${originalIndex})">댓글 달기</button>
-                        <button class="reply-btn" style="color: #666; margin-left: 10px;" onclick="toggleEditForm(${originalIndex})">수정</button>
-                        <button class="reply-btn" style="color: var(--primary); margin-left: 10px; font-weight: bold;" onclick="addLike(${originalIndex})">추천 ${post.likes || 0}</button>
-                    </div>
-                    
-                    <div id="replyForm-${originalIndex}" class="reply-form">
-                        <div class="form-group">
-                            <input type="text" id="replyAuthor-${originalIndex}" placeholder="댓글 작성자" style="padding: 0.5rem; font-size: 0.8rem; margin-bottom: 0.5rem; width: 100%;">
-                            <input type="password" id="replyPassword-${originalIndex}" placeholder="댓글 비밀번호" style="padding: 0.5rem; font-size: 0.8rem; margin-bottom: 0.5rem; width: 100%;">
-                            <textarea id="replyContent-${originalIndex}" rows="2" placeholder="댓글 내용" style="padding: 0.5rem; font-size: 0.8rem; width: 100%;"></textarea>
+                    <div class="post-content-container">
+                        <div class="post-header">
+                            <span class="post-author">${escapeHtml(post.author)}</span>
+                            <span class="post-date">${post.date}</span>
                         </div>
-                        <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.8rem;" onclick="submitReply(${originalIndex})">등록</button>
-                        <button class="reply-btn" style="color: #999; margin-left: 10px;" onclick="toggleReplyForm(${originalIndex})">취소</button>
-                    </div>
-
-                    <div id="editForm-${originalIndex}" class="reply-form">
-                        <div class="form-group">
-                            <label style="font-size: 0.8rem; margin-bottom: 0.3rem; display: block;">비밀번호 확인</label>
-                            <input type="password" id="editPassword-${originalIndex}" placeholder="비밀번호를 입력하세요" style="padding: 0.5rem; font-size: 0.8rem; margin-bottom: 0.5rem; width: 100%;">
-                            <label style="font-size: 0.8rem; margin-bottom: 0.3rem; display: block;">내용 수정</label>
-                            <textarea id="editContent-${originalIndex}" rows="4" style="padding: 0.5rem; font-size: 0.8rem; width: 100%;">${escapeHtml(post.content)}</textarea>
+                        <div class="post-content">
+                            <p style="white-space: pre-wrap;">${escapeHtml(post.content)}</p>
                         </div>
-                        <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.8rem;" onclick="submitEdit(${originalIndex})">수정 완료</button>
-                        <button class="reply-btn" style="color: #999; margin-left: 10px;" onclick="toggleEditForm(${originalIndex})">취소</button>
-                    </div>
-
-                    <div class="comment-section" id="comments-${originalIndex}">
-                        ${post.comments.map((c, commentIdx) => `
-                            <div class="comment-item">
-                                <div class="comment-header">
-                                    <span>${escapeHtml(c.author)}</span>
-                                    <div style="display: flex; align-items: center; gap: 10px;">
-                                        <span style="font-size: 0.75rem; font-weight: normal; color: #999;">${c.date}</span>
-                                        <button class="reply-btn" style="font-size: 0.7rem; margin-top: 0;" onclick="toggleEditCommentForm(${originalIndex}, ${commentIdx})">수정</button>
-                                    </div>
-                                </div>
-                                <div id="commentContent-${originalIndex}-${commentIdx}" style="white-space: pre-wrap;">${escapeHtml(c.content)}</div>
-                                
-                                <div id="editCommentForm-${originalIndex}-${commentIdx}" class="reply-form" style="margin-top: 10px;">
-                                    <div class="form-group">
-                                        <input type="password" id="editCommentPassword-${originalIndex}-${commentIdx}" placeholder="비밀번호 확인" style="padding: 0.4rem; font-size: 0.75rem; margin-bottom: 0.5rem; width: 100%;">
-                                        <textarea id="editCommentContent-${originalIndex}-${commentIdx}" rows="2" style="padding: 0.4rem; font-size: 0.75rem; width: 100%;">${escapeHtml(c.content)}</textarea>
-                                    </div>
-                                    <button class="btn btn-primary" style="padding: 0.4rem 0.8rem; font-size: 0.75rem;" onclick="submitCommentEdit(${originalIndex}, ${commentIdx})">수정 완료</button>
-                                    <button class="reply-btn" style="color: #999; margin-left: 10px; font-size: 0.75rem;" onclick="toggleEditCommentForm(${originalIndex}, ${commentIdx})">취소</button>
-                                </div>
+                        
+                        <div class="post-actions">
+                            <button class="reply-btn" onclick="toggleReplyForm(${originalIndex})">댓글 달기</button>
+                            <button class="reply-btn" style="color: #666; margin-left: 10px;" onclick="toggleEditForm(${originalIndex})">수정</button>
+                        </div>
+                        
+                        <div id="replyForm-${originalIndex}" class="reply-form">
+                            <div class="form-group">
+                                <input type="text" id="replyAuthor-${originalIndex}" placeholder="댓글 작성자" style="padding: 0.5rem; font-size: 0.8rem; margin-bottom: 0.5rem; width: 100%;">
+                                <input type="password" id="replyPassword-${originalIndex}" placeholder="댓글 비밀번호" style="padding: 0.5rem; font-size: 0.8rem; margin-bottom: 0.5rem; width: 100%;">
+                                <textarea id="replyContent-${originalIndex}" rows="2" placeholder="댓글 내용" style="padding: 0.5rem; font-size: 0.8rem; width: 100%;"></textarea>
                             </div>
-                        `).join('')}
+                            <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.8rem;" onclick="submitReply(${originalIndex})">등록</button>
+                            <button class="reply-btn" style="color: #999; margin-left: 10px;" onclick="toggleReplyForm(${originalIndex})">취소</button>
+                        </div>
+
+                        <div id="editForm-${originalIndex}" class="reply-form">
+                            <div class="form-group">
+                                <label style="font-size: 0.8rem; margin-bottom: 0.3rem; display: block;">비밀번호 확인</label>
+                                <input type="password" id="editPassword-${originalIndex}" placeholder="비밀번호를 입력하세요" style="padding: 0.5rem; font-size: 0.8rem; margin-bottom: 0.5rem; width: 100%;">
+                                <label style="font-size: 0.8rem; margin-bottom: 0.3rem; display: block;">내용 수정</label>
+                                <textarea id="editContent-${originalIndex}" rows="4" style="padding: 0.5rem; font-size: 0.8rem; width: 100%;">${escapeHtml(post.content)}</textarea>
+                            </div>
+                            <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.8rem;" onclick="submitEdit(${originalIndex})">수정 완료</button>
+                            <button class="reply-btn" style="color: #999; margin-left: 10px;" onclick="toggleEditForm(${originalIndex})">취소</button>
+                        </div>
+
+                        <div class="comment-section" id="comments-${originalIndex}">
+                            ${post.comments.map((c, commentIdx) => `
+                                <div class="comment-item">
+                                    <div class="comment-header">
+                                        <span>${escapeHtml(c.author)}</span>
+                                        <div style="display: flex; align-items: center; gap: 10px;">
+                                            <span style="font-size: 0.75rem; font-weight: normal; color: #999;">${c.date}</span>
+                                            <button class="reply-btn" style="font-size: 0.7rem; margin-top: 0;" onclick="toggleEditCommentForm(${originalIndex}, ${commentIdx})">수정</button>
+                                        </div>
+                                    </div>
+                                    <div id="commentContent-${originalIndex}-${commentIdx}" style="white-space: pre-wrap;">${escapeHtml(c.content)}</div>
+                                    
+                                    <div id="editCommentForm-${originalIndex}-${commentIdx}" class="reply-form" style="margin-top: 10px;">
+                                        <div class="form-group">
+                                            <input type="password" id="editCommentPassword-${originalIndex}-${commentIdx}" placeholder="비밀번호 확인" style="padding: 0.4rem; font-size: 0.75rem; margin-bottom: 0.5rem; width: 100%;">
+                                            <textarea id="editCommentContent-${originalIndex}-${commentIdx}" rows="2" style="padding: 0.4rem; font-size: 0.75rem; width: 100%;">${escapeHtml(c.content)}</textarea>
+                                        </div>
+                                        <button class="btn btn-primary" style="padding: 0.4rem 0.8rem; font-size: 0.75rem;" onclick="submitCommentEdit(${originalIndex}, ${commentIdx})">수정 완료</button>
+                                        <button class="reply-btn" style="color: #999; margin-left: 10px; font-size: 0.75rem;" onclick="toggleEditCommentForm(${originalIndex}, ${commentIdx})">취소</button>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    <div class="post-score-bar">
+                        <button class="vote-btn ${userVote === 1 ? 'active-up' : ''}" onclick="handleVote(${originalIndex}, 1)" title="추천">▲</button>
+                        <span class="score-num" title="추천지수">${post.score || 0}</span>
+                        <button class="vote-btn ${userVote === -1 ? 'active-down' : ''}" onclick="handleVote(${originalIndex}, -1)" title="비추천">▼</button>
                     </div>
                 `;
                 postsContainer.appendChild(postEl);
@@ -199,7 +212,7 @@
             const date = new Date().toLocaleString('ko-KR');
             const uid = Date.now() + Math.random().toString(36).substr(2, 9);
 
-            const newPost = { uid, author, password, content, date, comments: [], likes: 0 };
+            const newPost = { uid, author, password, content, date, comments: [], score: 0 };
             const posts = JSON.parse(localStorage.getItem('minsu_board_data') || '[]');
             posts.push(newPost);
             localStorage.setItem('minsu_board_data', JSON.stringify(posts));
@@ -315,22 +328,38 @@
             alert('댓글이 수정되었습니다.');
         }
 
-        function addLike(idx) {
+        function handleVote(idx, type) {
             const posts = JSON.parse(localStorage.getItem('minsu_board_data') || '[]');
             const post = posts[idx];
-            const likedUids = JSON.parse(localStorage.getItem('minsu_liked_uids') || '[]');
+            const userVotes = JSON.parse(localStorage.getItem('minsu_user_votes') || '{}');
+            const currentVote = userVotes[post.uid] || 0;
 
-            if (likedUids.includes(post.uid)) {
-                alert('이미 추천한 게시물입니다.');
-                return;
+            if (post.score === undefined) post.score = 0;
+
+            if (currentVote === type) {
+                // Cancel vote with confirmation
+                const label = type === 1 ? '추천' : '비추천';
+                if (!confirm(`이미 ${label}한 게시물입니다. 취소하시겠습니까?`)) {
+                    return;
+                }
+                post.score -= type;
+                delete userVotes[post.uid];
+            } else {
+                // Change or new vote
+                if (currentVote !== 0) {
+                    // Change vote with confirmation
+                    const currentLabel = currentVote === 1 ? '추천' : '비추천';
+                    if (!confirm(`이미 ${currentLabel}한 게시물입니다. 변경하시겠습니까?`)) {
+                        return;
+                    }
+                    post.score -= currentVote;
+                }
+                post.score += type;
+                userVotes[post.uid] = type;
             }
 
-            if (post.likes === undefined) post.likes = 0;
-            post.likes += 1;
-            likedUids.push(post.uid);
-            
             localStorage.setItem('minsu_board_data', JSON.stringify(posts));
-            localStorage.setItem('minsu_liked_uids', JSON.stringify(likedUids));
+            localStorage.setItem('minsu_user_votes', JSON.stringify(userVotes));
             renderPosts();
         }
 

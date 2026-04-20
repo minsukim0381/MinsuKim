@@ -188,6 +188,7 @@
                                         <div style="display: flex; align-items: center; gap: 10px;">
                                             <span style="font-size: 0.75rem; font-weight: normal; color: #999;">${c.date}</span>
                                             <button class="reply-btn" style="font-size: 0.7rem; margin-top: 0;" onclick="toggleEditCommentForm(${originalIndex}, ${commentIdx})">수정</button>
+                                            <button class="reply-btn" style="font-size: 0.7rem; margin-top: 0; color: #e1002d;" onclick="toggleDeleteCommentForm(${originalIndex}, ${commentIdx})">삭제</button>
                                         </div>
                                     </div>
                                     <div id="commentContent-${originalIndex}-${commentIdx}" style="white-space: pre-wrap;">${escapeHtml(c.content)}</div>
@@ -199,6 +200,15 @@
                                         </div>
                                         <button class="btn btn-primary" style="padding: 0.4rem 0.8rem; font-size: 0.75rem;" onclick="submitCommentEdit(${originalIndex}, ${commentIdx})">수정 완료</button>
                                         <button class="reply-btn" style="color: #999; margin-left: 10px; font-size: 0.75rem;" onclick="toggleEditCommentForm(${originalIndex}, ${commentIdx})">취소</button>
+                                    </div>
+
+                                    <div id="deleteCommentForm-${originalIndex}-${commentIdx}" class="reply-form" style="margin-top: 10px;">
+                                        <div class="form-group">
+                                            <label style="font-size: 0.7rem; margin-bottom: 0.2rem; display: block;">댓글 삭제 비밀번호 확인</label>
+                                            <input type="password" id="deleteCommentPassword-${originalIndex}-${commentIdx}" placeholder="비밀번호" style="padding: 0.4rem; font-size: 0.75rem; margin-bottom: 0.5rem; width: 100%;">
+                                        </div>
+                                        <button class="btn btn-primary" style="padding: 0.4rem 0.8rem; font-size: 0.75rem; background-color: #e1002d;" onclick="submitCommentDelete(${originalIndex}, ${commentIdx})">삭제 확정</button>
+                                        <button class="reply-btn" style="color: #999; margin-left: 10px; font-size: 0.75rem;" onclick="toggleDeleteCommentForm(${originalIndex}, ${commentIdx})">취소</button>
                                     </div>
                                 </div>
                             `).join('')}
@@ -370,6 +380,42 @@
             localStorage.setItem('minsu_board_data', JSON.stringify(posts));
             renderPosts();
             alert('댓글이 수정되었습니다.');
+        }
+
+        function toggleDeleteCommentForm(postIdx, commentIdx) {
+            const form = document.getElementById(`deleteCommentForm-${postIdx}-${commentIdx}`);
+            form.classList.toggle('active');
+        }
+
+        function submitCommentDelete(postIdx, commentIdx) {
+            const inputPwd = document.getElementById(`deleteCommentPassword-${postIdx}-${commentIdx}`).value;
+
+            if (!inputPwd) {
+                alert('비밀번호를 입력해주세요.');
+                return;
+            }
+
+            const posts = JSON.parse(localStorage.getItem('minsu_board_data') || '[]');
+            const comment = posts[postIdx].comments[commentIdx];
+
+            if (comment.password === undefined) {
+                alert('비밀번호가 설정되지 않은 이전 댓글입니다.');
+                return;
+            }
+
+            if (inputPwd !== comment.password) {
+                alert('비밀번호가 일치하지 않습니다.');
+                return;
+            }
+
+            if (!confirm('댓글을 정말 삭제하시겠습니까?')) {
+                return;
+            }
+
+            posts[postIdx].comments.splice(commentIdx, 1);
+            localStorage.setItem('minsu_board_data', JSON.stringify(posts));
+            renderPosts();
+            alert('댓글이 삭제되었습니다.');
         }
 
         function handleVote(idx, type) {

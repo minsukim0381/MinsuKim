@@ -147,6 +147,7 @@
                         <div class="post-actions">
                             <button class="reply-btn" onclick="toggleReplyForm(${originalIndex})">댓글 달기</button>
                             <button class="reply-btn" style="color: #666; margin-left: 10px;" onclick="toggleEditForm(${originalIndex})">수정</button>
+                            <button class="reply-btn" style="color: #e1002d; margin-left: 10px;" onclick="toggleDeleteForm(${originalIndex})">삭제</button>
                         </div>
                         
                         <div id="replyForm-${originalIndex}" class="reply-form">
@@ -168,6 +169,15 @@
                             </div>
                             <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.8rem;" onclick="submitEdit(${originalIndex})">수정 완료</button>
                             <button class="reply-btn" style="color: #999; margin-left: 10px;" onclick="toggleEditForm(${originalIndex})">취소</button>
+                        </div>
+
+                        <div id="deleteForm-${originalIndex}" class="reply-form">
+                            <div class="form-group">
+                                <label style="font-size: 0.8rem; margin-bottom: 0.3rem; display: block;">삭제 비밀번호 확인</label>
+                                <input type="password" id="deletePassword-${originalIndex}" placeholder="비밀번호를 입력하세요" style="padding: 0.5rem; font-size: 0.8rem; margin-bottom: 0.5rem; width: 100%;">
+                            </div>
+                            <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.8rem; background-color: #e1002d;" onclick="submitDelete(${originalIndex})">삭제 확정</button>
+                            <button class="reply-btn" style="color: #999; margin-left: 10px;" onclick="toggleDeleteForm(${originalIndex})">취소</button>
                         </div>
 
                         <div class="comment-section" id="comments-${originalIndex}">
@@ -220,6 +230,40 @@
             postForm.reset();
             renderPosts();
         });
+
+        function toggleDeleteForm(idx) {
+            const form = document.getElementById(`deleteForm-${idx}`);
+            form.classList.toggle('active');
+
+            // Hide other forms
+            const editForm = document.getElementById(`editForm-${idx}`);
+            const replyForm = document.getElementById(`replyForm-${idx}`);
+            if (editForm.classList.contains('active')) editForm.classList.remove('active');
+            if (replyForm.classList.contains('active')) replyForm.classList.remove('active');
+        }
+
+        function submitDelete(idx) {
+            const inputPwd = document.getElementById(`deletePassword-${idx}`).value;
+            if (!inputPwd) {
+                alert('비밀번호를 입력해주세요.');
+                return;
+            }
+
+            const posts = JSON.parse(localStorage.getItem('minsu_board_data') || '[]');
+            const post = posts[idx];
+
+            if (inputPwd !== post.password) {
+                alert('비밀번호가 일치하지 않습니다.');
+                return;
+            }
+
+            if (confirm('정말로 이 게시글을 삭제하시겠습니까?')) {
+                posts.splice(idx, 1);
+                localStorage.setItem('minsu_board_data', JSON.stringify(posts));
+                renderPosts();
+                alert('삭제되었습니다.');
+            }
+        }
 
         function toggleEditForm(idx) {
             const form = document.getElementById(`editForm-${idx}`);

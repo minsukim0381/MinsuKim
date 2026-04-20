@@ -30,7 +30,14 @@
 
         <!-- Posts List -->
         <section id="boardList" class="reveal">
-            <h2 style="margin-bottom: 2rem; font-size: 1.5rem;">전체 게시물</h2>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h2 style="font-size: 1.5rem; margin-bottom: 0;">전체 게시물</h2>
+                <select id="sortSelect" onchange="renderPosts()" style="padding: 0.5rem; border-radius: 8px; border: 1px solid #ddd; font-size: 0.9rem; outline: none; cursor: pointer;">
+                    <option value="latest">최신순</option>
+                    <option value="oldest">오래된 순</option>
+                    <option value="likes">추천순</option>
+                </select>
+            </div>
             <div id="postsContainer">
                 <!-- Posts will be injected here -->
                 <p id="emptyMsg" style="text-align: center; color: var(--text-muted); padding: 3rem;">아직 게시물이 없습니다. 첫 글의 주인공이 되어보세요!</p>
@@ -69,12 +76,45 @@
 
         // Initial Load
         window.onload = () => {
+            migrateUids();
             renderPosts();
             reveal();
         };
 
-        function renderPosts() {
+        function migrateUids() {
             const posts = JSON.parse(localStorage.getItem('minsu_board_data') || '[]');
+            let changed = false;
+            posts.forEach(p => {
+                if (!p.uid) {
+                    p.uid = Date.now() + Math.random().toString(36).substr(2, 9);
+                    changed = true;
+                }
+            });
+            if (changed) {
+                localStorage.setItem('minsu_board_data', JSON.stringify(posts));
+            }
+        }
+
+        function renderPosts() {
+            const sortType = document.getElementById('sortSelect')?.value || 'latest';
+            let posts = JSON.parse(localStorage.getItem('minsu_board_data') || '[]');
+            
+            // Add unique index tracking more explicitly for sorting stability
+            posts = posts.map((p, i) => ({ ...p, originalIndex: i }));
+
+            if (sortType === 'latest') {
+                posts.sort((a, b) => b.originalIndex - a.originalIndex);
+            } else if (sortType === 'oldest') {
+                posts.sort((a, b) => a.originalIndex - b.originalIndex);
+            } else if (sortType === 'likes') {
+                posts.sort((a, b) => {
+                    if ((b.likes || 0) !== (a.likes || 0)) {
+                        return (b.likes || 0) - (a.likes || 0);
+                    }
+                    return b.originalIndex - a.originalIndex;
+                });
+            }
+
             postsContainer.innerHTML = '';
             
             if (posts.length === 0) {
@@ -83,9 +123,8 @@
                 return;
             }
 
-            posts.reverse().forEach((post, index) => {
-                // Reverse index because we reversed the array icon
-                const originalIndex = posts.length - 1 - index; 
+            posts.forEach((post) => {
+                const originalIndex = post.originalIndex;
                 const postEl = document.createElement('div');
                 postEl.className = 'post-item reveal active';
                 postEl.innerHTML = `
@@ -100,6 +139,7 @@
                     <div class="post-actions">
                         <button class="reply-btn" onclick="toggleReplyForm(${originalIndex})">댓글 달기</button>
                         <button class="reply-btn" style="color: #666; margin-left: 10px;" onclick="toggleEditForm(${originalIndex})">수정</button>
+                        <button class="reply-btn" style="color: var(--primary); margin-left: 10px; font-weight: bold;" onclick="addLike(${originalIndex})">추천 ${post.likes || 0}</button>
                     </div>
                     
                     <div id="replyForm-${originalIndex}" class="reply-form">
@@ -157,8 +197,9 @@
             const password = document.getElementById('password').value;
             const content = document.getElementById('content').value;
             const date = new Date().toLocaleString('ko-KR');
+            const uid = Date.now() + Math.random().toString(36).substr(2, 9);
 
-            const newPost = { author, password, content, date, comments: [] };
+            const newPost = { uid, author, password, content, date, comments: [], likes: 0 };
             const posts = JSON.parse(localStorage.getItem('minsu_board_data') || '[]');
             posts.push(newPost);
             localStorage.setItem('minsu_board_data', JSON.stringify(posts));
@@ -272,6 +313,25 @@
             localStorage.setItem('minsu_board_data', JSON.stringify(posts));
             renderPosts();
             alert('댓글이 수정되었습니다.');
+        }
+
+        function addLike(idx) {
+            const posts = JSON.parse(localStorage.getItem('minsu_board_data') || '[]');
+            const post = posts[idx];
+            const likedUids = JSON.parse(localStorage.getItem('minsu_liked_uids') || '[]');
+
+            if (likedUids.includes(post.uid)) {
+                alert('이미 추천한 게시물입니다.');
+                return;
+            }
+
+            if (post.likes === undefined) post.likes = 0;
+            post.likes += 1;
+            likedUids.push(post.uid);
+            
+            localStorage.setItem('minsu_board_data', JSON.stringify(posts));
+            localStorage.setItem('minsu_liked_uids', JSON.stringify(likedUids));
+            renderPosts();
         }
 
         function escapeHtml(text) {

@@ -420,3 +420,28 @@ footer {
         font-size: 2.5rem;
     }
 }
+/* Background Effect */
+.bg-gradient-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+    background: #ffffff;
+    pointer-events: none;
+}
+
+.bg-gradient-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('assets/semiconductor_bg.png') center/cover no-repeat fixed;
+    opacity: 0.12;
+    z-index: -1;
+}
+

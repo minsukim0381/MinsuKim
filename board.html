@@ -28,6 +28,15 @@
             <p style="color: #6e6e73; font-size: 1.1rem;">자유로운 의견이나 궁금한 점을 남겨주세요.</p>
         </header>
 
+        <!-- Posts List -->
+        <section id="boardList" class="reveal">
+            <h2 style="margin-bottom: 2rem; font-size: 1.5rem;">전체 게시물</h2>
+            <div id="postsContainer">
+                <!-- Posts will be injected here -->
+                <p id="emptyMsg" style="text-align: center; color: var(--text-muted); padding: 3rem;">아직 게시물이 없습니다. 첫 글의 주인공이 되어보세요!</p>
+            </div>
+        </section>
+
         <!-- New Post Form -->
         <section class="post-form reveal">
             <h2 style="margin-bottom: 2rem; font-size: 1.5rem;">글 남기기</h2>
@@ -37,20 +46,15 @@
                     <input type="text" id="author" placeholder="이름을 입력하세요" required>
                 </div>
                 <div class="form-group">
+                    <label for="password">비밀번호</label>
+                    <input type="password" id="password" placeholder="수정 시 필요한 비밀번호" required>
+                </div>
+                <div class="form-group">
                     <label for="content">내용</label>
                     <textarea id="content" rows="4" placeholder="내용을 자유롭게 입력하세요" required></textarea>
                 </div>
                 <button type="submit" class="btn btn-primary" style="width: 100%;">등록하기</button>
             </form>
-        </section>
-
-        <!-- Posts List -->
-        <section id="boardList" class="reveal">
-            <h2 style="margin-bottom: 2rem; font-size: 1.5rem;">전체 게시물</h2>
-            <div id="postsContainer">
-                <!-- Posts will be injected here -->
-                <p id="emptyMsg" style="text-align: center; color: var(--text-muted); padding: 3rem;">아직 게시물이 없습니다. 첫 글의 주인공이 되어보세요!</p>
-            </div>
         </section>
     </div>
 
@@ -93,7 +97,10 @@
                         <p style="white-space: pre-wrap;">${escapeHtml(post.content)}</p>
                     </div>
                     
-                    <button class="reply-btn" onclick="toggleReplyForm(${originalIndex})">댓글 달기</button>
+                    <div class="post-actions">
+                        <button class="reply-btn" onclick="toggleReplyForm(${originalIndex})">댓글 달기</button>
+                        <button class="reply-btn" style="color: #666; margin-left: 10px;" onclick="toggleEditForm(${originalIndex})">수정</button>
+                    </div>
                     
                     <div id="replyForm-${originalIndex}" class="reply-form">
                         <div class="form-group">
@@ -101,6 +108,18 @@
                             <textarea id="replyContent-${originalIndex}" rows="2" placeholder="댓글 내용" style="padding: 0.5rem; font-size: 0.8rem; width: 100%;"></textarea>
                         </div>
                         <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.8rem;" onclick="submitReply(${originalIndex})">등록</button>
+                        <button class="reply-btn" style="color: #999; margin-left: 10px;" onclick="toggleReplyForm(${originalIndex})">취소</button>
+                    </div>
+
+                    <div id="editForm-${originalIndex}" class="reply-form">
+                        <div class="form-group">
+                            <label style="font-size: 0.8rem; margin-bottom: 0.3rem; display: block;">비밀번호 확인</label>
+                            <input type="password" id="editPassword-${originalIndex}" placeholder="비밀번호를 입력하세요" style="padding: 0.5rem; font-size: 0.8rem; margin-bottom: 0.5rem; width: 100%;">
+                            <label style="font-size: 0.8rem; margin-bottom: 0.3rem; display: block;">내용 수정</label>
+                            <textarea id="editContent-${originalIndex}" rows="4" style="padding: 0.5rem; font-size: 0.8rem; width: 100%;">${escapeHtml(post.content)}</textarea>
+                        </div>
+                        <button class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.8rem;" onclick="submitEdit(${originalIndex})">수정 완료</button>
+                        <button class="reply-btn" style="color: #999; margin-left: 10px;" onclick="toggleEditForm(${originalIndex})">취소</button>
                     </div>
 
                     <div class="comment-section" id="comments-${originalIndex}">
@@ -122,10 +141,11 @@
         postForm.addEventListener('submit', (e) => {
             e.preventDefault();
             const author = document.getElementById('author').value;
+            const password = document.getElementById('password').value;
             const content = document.getElementById('content').value;
             const date = new Date().toLocaleString('ko-KR');
 
-            const newPost = { author, content, date, comments: [] };
+            const newPost = { author, password, content, date, comments: [] };
             const posts = JSON.parse(localStorage.getItem('minsu_board_data') || '[]');
             posts.push(newPost);
             localStorage.setItem('minsu_board_data', JSON.stringify(posts));
@@ -134,9 +154,55 @@
             renderPosts();
         });
 
+        function toggleEditForm(idx) {
+            const form = document.getElementById(`editForm-${idx}`);
+            form.classList.toggle('active');
+            
+            // Hide other forms
+            const replyForm = document.getElementById(`replyForm-${idx}`);
+            if (replyForm.classList.contains('active')) replyForm.classList.remove('active');
+        }
+
+        function submitEdit(idx) {
+            const inputPwd = document.getElementById(`editPassword-${idx}`).value;
+            const newContent = document.getElementById(`editContent-${idx}`).value;
+            
+            if (!inputPwd) {
+                alert('비밀번호를 입력해주세요.');
+                return;
+            }
+
+            const posts = JSON.parse(localStorage.getItem('minsu_board_data') || '[]');
+            const post = posts[idx];
+
+            if (post.password === undefined) {
+                alert('비밀번호가 설정되지 않은 이전 게시물입니다.');
+                return;
+            }
+
+            if (inputPwd !== post.password) {
+                alert('비밀번호가 일치하지 않습니다.');
+                return;
+            }
+
+            if (!newContent.trim()) {
+                alert('내용을 입력해주세요.');
+                return;
+            }
+
+            posts[idx].content = newContent;
+            localStorage.setItem('minsu_board_data', JSON.stringify(posts));
+            renderPosts();
+            alert('수정되었습니다.');
+        }
+
         function toggleReplyForm(idx) {
             const form = document.getElementById(`replyForm-${idx}`);
             form.classList.toggle('active');
+
+            // Hide other forms
+            const editForm = document.getElementById(`editForm-${idx}`);
+            if (editForm.classList.contains('active')) editForm.classList.remove('active');
         }
 
         function submitReply(idx) {

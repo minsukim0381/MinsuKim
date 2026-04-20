@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,24 +15,28 @@
             max-width: 1200px;
             margin: 0 auto;
         }
+
         .class-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 2rem;
             margin-top: 3rem;
         }
+
         .category-card {
             background: #ffffff;
             border-radius: 20px;
             padding: 2.5rem;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.03);
-            border: 1px solid rgba(0,0,0,0.05);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.03);
+            border: 1px solid rgba(0, 0, 0, 0.05);
             transition: var(--transition-smooth);
         }
+
         .category-card:hover {
             transform: translateY(-10px);
             box-shadow: 0 20px 60px rgba(230, 0, 0, 0.08);
         }
+
         .category-title {
             font-size: 1.5rem;
             color: var(--primary-color);
@@ -42,41 +47,48 @@
             align-items: center;
             gap: 0.8rem;
         }
+
         .course-list {
             list-style: none;
         }
+
         .course-item {
             margin-bottom: 1.5rem;
             display: flex;
             align-items: flex-start;
             gap: 12px;
         }
+
         .check-mark {
             color: var(--primary-color);
             font-size: 1.1rem;
             margin-top: 2px;
         }
+
         .course-info strong {
             display: block;
             font-size: 1.05rem;
             margin-bottom: 0.4rem;
             color: var(--text-dark);
         }
+
         .course-summary {
             font-size: 0.88rem;
             color: var(--text-muted);
             line-height: 1.5;
         }
+
         .roadmap-img {
             width: 100%;
             max-width: 900px;
             border-radius: 20px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.1);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.1);
             margin-top: 2rem;
             transition: var(--transition-smooth);
         }
     </style>
 </head>
+
 <body style="background-color: var(--bg-light);">
 
     <nav>
@@ -92,18 +104,30 @@
 
     <main class="class-container">
         <header class="class-header reveal">
-        <span class="step-label" style="display: block; margin-bottom: 1.5rem;">Professional Curriculum (2023-2027)</span>
-        <h1>로봇 소프트웨어 전공 교육 이수 체계</h1>
-        <p style="color: #6e6e73; font-size: 1.1rem; max-width: 800px; margin: 1.5rem auto 0; line-height: 1.8;">
-            기초 공학부터 고급 제어 기술까지, 반도체 설비 유지보수에 최적화된 전문 인재로 성장하기 위해 이수한 주요 교과목들을 3가지 핵심 클러스터로 분류하였습니다.
-        </p>
+            <span class="step-label" style="display: block; margin-bottom: 1.5rem;">Professional Curriculum
+                (2023-2027)</span>
+            <h1>로봇 소프트웨어 전공 교육 이수 체계</h1>
+            <p style="color: #6e6e73; font-size: 1.1rem; max-width: 800px; margin: 1.5rem auto 0; line-height: 1.8;">
+                기초 공학부터 고급 제어 기술까지, 반도체 설비 유지보수에 최적화된 전문 인재로 성장하기 위해 이수한 주요 교과목들을 3가지 핵심 클러스터로 분류하였습니다.
+            </p>
 
-            <div style="margin-top: 5rem; width: 100%; max-width: 1100px; margin-left: auto; margin-right: auto;" class="reveal">
-                <div style="background: white; padding: 2.5rem; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid rgba(230, 0, 0, 0.1);">
-                    <img src="assets/new_class_roadmap.png" alt="Robot Software Engineering Curriculum Roadmap 2023-2027" style="width: 100%; height: auto; border-radius: 10px; display: block;">
-                    <p style="text-align: center; color: #6e6e73; font-size: 0.9rem; margin-top: 1.5rem; font-weight: 500;">
-                        <span style="color: #E60000; font-weight: 700;">[2023-2027]</span> 로봇 소프트웨어 전공 교육 이수 체계도 (Foundation - Core - Specialization)
+            <div style="margin-top: 5rem; width: 100%; max-width: 1100px; margin-left: auto; margin-right: auto;"
+                class="reveal">
+                <div
+                    style="background: white; padding: 2.5rem; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid rgba(230, 0, 0, 0.1);">
+                    <img src="assets/depart_02-1_tab1.png" alt="Robot Software Engineering Curriculum Roadmap"
+                        style="width: 100%; height: auto; border-radius: 10px; display: block;">
+                    <p
+                        style="text-align: center; color: #6e6e73; font-size: 0.9rem; margin-top: 1.5rem; font-weight: 500;">
+                        <span style="color: #E60000; font-weight: 700;">[Robot Software]</span> 동양미래대학교 로봇소프트웨어과 교육 과정
                     </p>
+                    <div style="display: flex; justify-content: center; gap: 1rem; margin-top: 2rem; flex-wrap: wrap;">
+                        <a href="https://www.dongyang.ac.kr/dmu/4495/subview.do" target="_blank" class="btn btn-primary"
+                            style="font-size: 0.9rem; padding: 0.8rem 1.5rem;">로봇소프트웨어과 홈페이지</a>
+                        <a href="https://bootcamp.dongyang.ac.kr/" target="_blank" class="btn"
+                            style="font-size: 0.9rem; padding: 0.8rem 1.5rem; border: 1px solid var(--primary-color); color: var(--primary-color);">동양미래대
+                            부트캠프 바로가기</a>
+                    </div>
                 </div>
             </div>
         </header>
@@ -141,7 +165,8 @@
             <!-- Category 2: Professional Practice (전공실무) -->
             <section class="category-card reveal">
                 <h2 class="category-title"><span>⚙️</span> 전공 실무 (HW/SW 제어)</h2>
-                <ul class="course-list" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); display: grid; gap: 1rem;">
+                <ul class="course-list"
+                    style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); display: grid; gap: 1rem;">
                     <li class="course-item">
                         <div class="course-info">
                             <strong>PLC 프로그래밍 & 제어 / PC기반제어</strong>
@@ -209,7 +234,7 @@
                 </ul>
             </section>
         </div>
-        
+
         <div style="text-align: center; margin-top: 5rem;" class="reveal">
             <a href="history.html" class="btn btn-primary">교육 및 성장 과정 확인하기</a>
         </div>
@@ -235,4 +260,5 @@
         window.onload = reveal;
     </script>
 </body>
+
 </html>
